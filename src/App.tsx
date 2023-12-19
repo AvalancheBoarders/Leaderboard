@@ -9,12 +9,23 @@ import { CreateBill } from './CreateBill';
 import useNotificaiton from './components/notification/useNotification';
 import NotificationBox from './components/notification/NotificationBox';
 import Button from './components/button/Button';
+import { BillDisplay } from './BillDisplay';
+import { LeaderBoard } from './Leaderboard';
 
 
 export interface User {
     userID: string;
     firstName: string;
     lastName: string;
+}
+
+export interface Item {
+    user: User;
+    quantity: number;
+}
+export interface IBill {
+    date: string;
+    items: Item[]
 }
 
 function App() {
@@ -24,8 +35,10 @@ function App() {
     const { notification, showTemporarily } = useNotificaiton()
     
     const usersCollectionRef = collection(db, "users");
+    const billsCollectionRef = collection(db, "bills");
     const [authUser, setAuthUser] = useState<any>(null);
     const [users, setUsers] = useState<User[]>([]);
+    const [bills, setBills] = useState<IBill[]>([]);
 
     const getUsers = async () => {
         const data = await getDocs(usersCollectionRef);
@@ -36,9 +49,39 @@ function App() {
             return u;
         }))
     }
+
+    const getBills = async () => {
+        if (users === null || users === undefined || users.length === 0) {
+            return;
+        }
+
+        const data = await getDocs(billsCollectionRef);
+        const dataBills: any = data.docs.map((doc) => ({...doc.data(), id: doc.id})).filter((bill: any) => bill.items.length > 0)
+        setBills(dataBills.map((bill: any) => {
+            const date = bill.date;
+            const newItems: Item[] = bill.items.map((item: any) => {
+                const user = users.find((u) => u.userID === item.userID)
+                console.log("find user", item.userID, users);
+                if (user === null || user === undefined) {
+                    console.log("couldnt find user", item.userID, users);
+                    return {};
+                }
+                const newItem: Item = {quantity: parseInt(item.quantity), user: user}
+                return newItem;
+            })
+            const newBill: IBill = {date: date, items: newItems};
+            console.log("newbill", newBill);
+            return newBill;
+        }))
+    }
+
     useEffect(() => {
         getUsers();
     }, [])
+
+    useEffect(() => {
+        getBills();
+    }, [users])
 
     const createUser = async () => {
         await addDoc(usersCollectionRef, {firstName: firstName, lastName: lastName}).then(() => {
@@ -78,7 +121,12 @@ function App() {
         <div className="App">
             <NotificationBox notification={notification}/>
             <div className="content">
+
+                <LeaderBoard users={users} bills={bills}/>
+                <BillDisplay bills={bills}/>
+
                 <SignIn/>
+
                 {authUser &&
                 <>
                     <div>Auth details {authUser ? 
