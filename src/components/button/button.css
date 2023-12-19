@@ -1,0 +1,34 @@
+.button {
+    padding: 0.3rem 1rem 0.3rem 1rem;
+    /* color: #D3D3D3; */
+    background-color: #01a2fd;
+    border-radius: 0.5rem;
+    border: none;
+    transition: .45s;
+}
+
+.button.orange{
+    background-color: aliceblue;
+}
+
+.button.full-width{
+    width: 100%;
+}
+
+.button.orange:hover {
+    opacity: 0.9;
+}
+
+.button:hover {
+    opacity: 0.8;
+}
+
+.button.blue-white {
+    background-color: var(--red30);
+    color: white;
+}
+
+.button.red-white {
+    background-color: var(--red80);
+    color: white;
+}

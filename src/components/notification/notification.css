@@ -1,0 +1,31 @@
+.notification {
+    z-index: 1000; /* Should appear above create modal. */
+    position: fixed;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0.5rem;
+    bottom: 1rem;
+    left: 1rem;
+    min-width: 20%;
+    height: 8vh;
+
+    background-color: var(--gray10);
+    border-radius: 1rem;
+    border-bottom: 1rem solid var(--red80);
+    font-size: 20px;
+    font-weight: 400;
+    color: black;
+}
+
+.notification.successful {
+    border-bottom-color: var(--green20);
+}
+
+.notification.error {
+    border-bottom-color: var(--red80);
+}
+
+.notification.warning {
+    border-bottom-color: var(--orange);
+}

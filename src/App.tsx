@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { auth, db } from './firebase-config';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 import SignIn from './SignIn';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { UsersDisplay } from './UsersDisplay';
+import { CreateBill } from './CreateBill';
+
+
+export interface User {
+    userID: string;
+    firstName: string;
+    lastName: string;
+}
 
 function App() {
     console.log("heyy")
@@ -12,6 +20,20 @@ function App() {
     
     const usersCollectionRef = collection(db, "users");
     const [authUser, setAuthUser] = useState<any>(null);
+    const [users, setUsers] = useState<User[]>([]);
+
+    useEffect(() => {
+        const getUsers = async () => {
+            const data = await getDocs(usersCollectionRef);
+            console.log(data.docs.map((d) => (d.data())));
+            const dataUsers: any = data.docs.map((doc) => ({...doc.data(), id: doc.id}))
+            setUsers(dataUsers.map((user: any) => {
+                const u: User = {userID: user.id, firstName: user.firstName, lastName: user.lastName};
+                return u;
+            }))
+        }
+        getUsers();
+    }, [])
 
     const createUser = async () => {
         await addDoc(usersCollectionRef, {name: newName})
@@ -51,7 +73,8 @@ function App() {
                         <button onClick={() => userSignOut()}>Sign out</button>
                     </div> : <p>Signed out</p>}
                 </div>
-                <UsersDisplay/>
+                <UsersDisplay users={users}/>
+                <CreateBill users={users}/>
                 {authUser && <div>
                     <input placeholder="name..." onChange={(e) => {setNewName(e.target.value)}}/>
                     <button onClick={createUser}>Create USer</button>

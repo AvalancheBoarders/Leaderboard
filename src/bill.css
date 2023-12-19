@@ -1,0 +1,24 @@
+.bill-input-container {
+    padding: 1rem;
+    border: 5px solid grey;
+}
+
+.bill-container {
+    background-color: aliceblue;
+    padding: 1rem;
+}
+
+.bill-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+.bill-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 2px solid #01a2fd;
+    padding: 0.5rem;
+}
