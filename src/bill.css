@@ -1,6 +1,6 @@
 .bill-input-container {
     padding: 1rem;
-    border: 5px solid grey;
+    /* border: 5px solid grey; */
 }
 
 .bills-container {
@@ -10,6 +10,10 @@
     justify-content: flex-start;
     overflow: auto;
     white-space: nowrap;
+}
+
+.bill-creation-container {
+    border: 5px solid grey;
 }
 
 .bill-container {

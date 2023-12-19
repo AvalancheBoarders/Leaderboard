@@ -29,10 +29,67 @@
     /* border: 1px solid green; */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.signin-container {
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    /* border: 1px solid black; */
 }
+
+.signedin-container {
+    display: flex;
+    flex-direction: row;
+    border-left: 5px solid grey;
+    padding: 0.5rem;
+    gap: 1rem;
+}
+
+input, select {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0px;
+    border-radius: 0.4rem;
+    border: 1px solid gray;
+    /* font-size: 20px; */
+}
+
+.user-creation-container {
+    border: 5px solid #D3D3D3;
+    padding: 1rem;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* align-items: center; */
+    gap: 1rem;
+}
+
+.avalanche-content {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.leaderboard-wrapper {
+    height: 70dvh;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.bill-wrapper {
+    height: 30dvh;
+    overflow: scroll;
+}
+
+@media screen and (max-width: 600px) {
+    .content {
+        width: 100%;
+    }
+  }
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -48,3 +105,5 @@
     transform: rotate(360deg);
   }
 }
+
+

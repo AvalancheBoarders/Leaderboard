@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebase-config';
+import Button from './components/button/Button';
+// import './app.css';
 
 type Props = {}
 
@@ -18,8 +20,7 @@ function SignIn({}: Props) {
     }
 
     return (
-        <div>
-            SignIn
+        <div className="signin-container">
             <input 
                 type="email" 
                 placeholder='Email...' 
@@ -32,7 +33,8 @@ function SignIn({}: Props) {
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)}
             />
-            <button onClick={(e) => signIn(e)}>Log in</button>
+            {/* <Button onClick={(e) => signIn(e)}>Sign in</button> */}
+            <Button onClick={(e:any) => signIn(e)} text={'Sign in'}/>
         </div>
     )
 }

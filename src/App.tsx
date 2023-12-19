@@ -122,26 +122,31 @@ function App() {
             <NotificationBox notification={notification}/>
             <div className="content">
 
-                <LeaderBoard users={users} bills={bills}/>
-                <BillDisplay bills={bills}/>
+                <div className='avalanche-content'>
+                    <div className="leaderboard-wrapper">
+                        <LeaderBoard users={users} bills={bills}/>
+                    </div>
+                    <div className='bill-wrapper'>
+                        <BillDisplay bills={bills}/>
+                    </div>
+                </div>
 
-                <SignIn/>
-
+                {!authUser && <SignIn/>}
                 {authUser &&
                 <>
-                    <div>Auth details {authUser ? 
-                        <div>
-                            <p>{`Signed In as ${authUser.email}`}</p>
-                            <button onClick={() => userSignOut()}>Sign out</button>
-                        </div> : <p>Signed out</p>}
+                    <div className='signedin-container'>
+                        <p>{`Signed In as ${authUser.email}`}</p>
+                        <Button onClick={() => userSignOut()} text={'Sign out'}/>
                     </div>
                     <CreateBill users={users}/>
-                    <div>
-                        <input placeholder="firstname..." onChange={(e) => {setFirstname(e.target.value)}}/>
-                        <input placeholder="lastname..." onChange={(e) => {setLastname(e.target.value)}}/>
-                        <Button onClick={() => createUser()} text={'Create User'}/>
+                    <div className='user-creation-container'>
+                        <div>
+                            <input placeholder="firstname..." onChange={(e) => {setFirstname(e.target.value)}}/>
+                            <input placeholder="lastname..." onChange={(e) => {setLastname(e.target.value)}}/>
+                            <Button onClick={() => createUser()} text={'Create User'}/>
+                        </div>
+                        <UsersDisplay users={users}/>
                     </div>
-                    <UsersDisplay users={users}/>
                 </>
                 }
             </div>

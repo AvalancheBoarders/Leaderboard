@@ -63,21 +63,23 @@ export function CreateBill ({users}: ICreateBillProps) {
 
   return (
     <div>
-        <div>
+        <div className='bill-creation-container'>
             <NotificationBox notification={notification}/>
             <div className='bill-input-container'>
             <Button onClick={() => ClearBill()} text={'Clear bill'}/>
                 <div><p>Bill date</p><input placeholder="date..." type='date' onChange={(e:any) => {setDate(e.target.value)}}/></div>
                 <div>
                     <p>Add item</p>
-                    <select onChange={(e) => setUserID(e.target.value)} value={userID}>
-                    <option value="default" disabled>Choose here</option>
-                        {users.map((user) => {
-                            return (<option key={"option" + user.userID} value={user.userID}>{user.firstName}</option>)
-                        })}
-                    </select>
-                    <input placeholder="quantity..." type='number' onChange={(e:any) => {setQuantity(e.target.value)}}/>
-                    <Button onClick={() => AddExpense()} text={'Add'}/>
+                    <div className="row">
+                        <select onChange={(e) => setUserID(e.target.value)} value={userID}>
+                        <option value="default" disabled>Choose here</option>
+                            {users.map((user) => {
+                                return (<option key={"option" + user.userID} value={user.userID}>{user.firstName} {user.lastName}</option>)
+                            })}
+                        </select>
+                        <input placeholder="quantity..." type='number' onChange={(e:any) => {setQuantity(e.target.value)}}/>
+                        <Button onClick={() => AddExpense()} text={'Add'}/>
+                    </div>
                 </div>
                 <Button onClick={() => SubmitBill()} text={'Submit bill'}/>
             </div>
