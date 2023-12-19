@@ -11,25 +11,13 @@ export interface IUsersDisplayProps {
 
 export function UsersDisplay ({users}: IUsersDisplayProps) {
     console.log("user display render", users);
-    // const [user, setUser] = useState<any>([]);
-    // const usersCollectionRef = collection(db, "users");
-
-    // useEffect(() => {
-    //     const getUsers = async () => {
-    //         const data = await getDocs(usersCollectionRef);
-    //         // console.log(data.docs.map((d) => (d.data())));
-    //         setUser(data.docs.map((doc) => ({...doc.data(), id: doc.id})))
-    //     }
-    //     getUsers();
-    // }, [])
 
     return (
         <div className="users-display">
-            <p>Users</p>
-            {/* <div>{user.map((u: any) => (<p key={u.id}>{u.name}{u.id}</p>))}</div> */}
-            <div>
+            <p>Users in database</p>
+            <div className="user-list">
                 {users.map((u: User) => (
-                    <p key={"userID" + u.userID}>{u.firstName} {u.lastName}</p>
+                    <p className="user-item" key={"userID" + u.userID}>{u.firstName} {u.lastName} - {u.userID}</p>
                 ))}
             </div>
         </div>
