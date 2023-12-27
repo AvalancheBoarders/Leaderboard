@@ -61,16 +61,13 @@ function App() {
             const date = bill.date;
             const newItems: Item[] = bill.items.map((item: any) => {
                 const user = users.find((u) => u.userID === item.userID)
-                console.log("find user", item.userID, users);
                 if (user === null || user === undefined) {
-                    console.log("couldnt find user", item.userID, users);
                     return {};
                 }
                 const newItem: Item = {quantity: parseInt(item.quantity), user: user}
                 return newItem;
             })
             const newBill: IBill = {date: date, items: newItems};
-            console.log("newbill", newBill);
             return newBill;
         }))
     }
@@ -121,6 +118,7 @@ function App() {
         <div className="App">
             <NotificationBox notification={notification}/>
             <div className="content">
+                <div className="hamburger-menu">Ham</div>
 
                 <div className='avalanche-content'>
                     <div className="leaderboard-wrapper">

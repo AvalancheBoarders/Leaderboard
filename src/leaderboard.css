@@ -16,13 +16,14 @@
 .title {
     color: #5bcbf5;
     text-align: center;
+    /* font-size: 24px; */
     /* font: bold 32px 'Quicksand', sans-serif; */
 }
 
 .major-stats {
     display: flex;
     flex-direction: column;
-    padding: 0.5rem;
+    padding: 0.5rem 0.5rem 0.5rem 0rem;
     width: 10rem;
     font: bold 'Quicksand', sans-serif;
 }
@@ -32,18 +33,31 @@
     color: #5bcbf5;
 }
 
+.leaderboard-subheader {
+    display: flex;
+    flex-direction: row;
+    padding: 0rem 0.5rem;
+    align-items: flex-end;
+}
 
+.leaderboard-mode-select {
+    padding: 0.0rem;
+    /* width: 50%; */
+}
 
 .leaderboard-item {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    gap: 0.2rem;
 }
 
 .leaderboard-username {
-    width: 30%;
+    width: 7rem;
     overflow: hidden;
+    text-wrap: nowrap;
+    /* border: 1px solid blue; */
 }
 .progress {
     position: relative;
