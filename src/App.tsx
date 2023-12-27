@@ -31,7 +31,7 @@ export interface IBill {
 export type Screen = "home" | "login";
 
 function App() {
-    console.log("heyy")
+    console.log("Render App")
     const [firstName, setFirstname] = useState<string>("");
     const [lastName, setLastname] = useState<string>("");
     const { notification, showTemporarily } = useNotificaiton()
@@ -48,7 +48,6 @@ function App() {
 
     const getUsers = async () => {
         const data = await getDocs(usersCollectionRef);
-        console.log(data.docs.map((d) => (d.data())));
         const dataUsers: any = data.docs.map((doc) => ({...doc.data(), id: doc.id}))
         setUsers(dataUsers.map((user: any) => {
             const u: User = {userID: user.id, firstName: user.firstName, lastName: user.lastName};
