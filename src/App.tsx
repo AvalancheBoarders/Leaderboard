@@ -11,7 +11,7 @@ import NotificationBox from './components/notification/NotificationBox';
 import Button from './components/button/Button';
 import { BillDisplay } from './BillDisplay';
 import { LeaderBoard } from './Leaderboard';
-
+import { SideBar } from './SideBar';
 
 export interface User {
     userID: string;
@@ -28,6 +28,8 @@ export interface IBill {
     items: Item[]
 }
 
+export type Screen = "home" | "login";
+
 function App() {
     console.log("heyy")
     const [firstName, setFirstname] = useState<string>("");
@@ -39,6 +41,10 @@ function App() {
     const [authUser, setAuthUser] = useState<any>(null);
     const [users, setUsers] = useState<User[]>([]);
     const [bills, setBills] = useState<IBill[]>([]);
+    const [sidebar, setSidebar] = useState(false);
+    const [screen, setScreen] = useState<Screen>('home')
+
+    const showSidebar = () => setSidebar(!sidebar);
 
     const getUsers = async () => {
         const data = await getDocs(usersCollectionRef);
@@ -81,6 +87,10 @@ function App() {
     }, [users])
 
     const createUser = async () => {
+        if (firstName.trim() === "" || lastName.trim() === "") {
+            showTemporarily("Failed to add user - add name", 'error');
+            return;
+        }
         await addDoc(usersCollectionRef, {firstName: firstName, lastName: lastName}).then(() => {
             showTemporarily("User added", 'successful');
             getUsers()
@@ -112,14 +122,21 @@ function App() {
         })
     }
 
-    
+    const handleSetScreen = (screen: Screen) => {
+        showSidebar();
+        setScreen(screen);
+    }
 
     return (
         <div className="App">
             <NotificationBox notification={notification}/>
+            <SideBar active={sidebar} activeScreen={screen} setScreen={(screen: Screen) => handleSetScreen(screen)}/>
             <div className="content">
-                <div className="hamburger-menu">Ham</div>
+            <button className="hamburger-menu" type="button" onClick={() => showSidebar()}>
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>
+            </button>
 
+            {screen === 'home' ? 
                 <div className='avalanche-content'>
                     <div className="leaderboard-wrapper">
                         <LeaderBoard users={users} bills={bills}/>
@@ -127,10 +144,8 @@ function App() {
                     <div className='bill-wrapper'>
                         <BillDisplay bills={bills}/>
                     </div>
-                </div>
-
-                {!authUser && <SignIn/>}
-                {authUser &&
+                </div> :
+                !authUser ? <SignIn/> : 
                 <>
                     <div className='signedin-container'>
                         <p>{`Signed In as ${authUser.email}`}</p>
@@ -146,7 +161,7 @@ function App() {
                         <UsersDisplay users={users}/>
                     </div>
                 </>
-                }
+            }
             </div>
         </div>
     );

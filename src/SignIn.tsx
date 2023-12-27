@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebase-config';
 import Button from './components/button/Button';
+import NotificationBox from './components/notification/NotificationBox';
+import useNotificaiton from './components/notification/useNotification';
 // import './app.css';
 
 type Props = {}
@@ -9,18 +11,22 @@ type Props = {}
 function SignIn({}: Props) {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const { notification, showTemporarily } = useNotificaiton()
 
     const signIn = (e: any) => {
         e.preventDefault();
         signInWithEmailAndPassword(auth, email, password).then((creds) => {
             console.log(creds)
+            showTemporarily("Sign in succesful!", 'successful')
         }).catch((err: any) => {
             console.log(err)
+            showTemporarily("Sign in failed", 'error')
         })
     }
 
     return (
         <div className="signin-container">
+            <NotificationBox notification={notification}/>
             <input 
                 type="email" 
                 placeholder='Email...' 
