@@ -73,7 +73,7 @@ export function CreateBill ({users}: ICreateBillProps) {
                     <div className="row">
                         <select onChange={(e) => setUserID(e.target.value)} value={userID}>
                         <option value="default" disabled>Choose here</option>
-                            {users.map((user) => {
+                            {users.sort((a: User, b: User) => a.firstName > b.firstName ? 1 : -1).map((user) => {
                                 return (<option key={"option" + user.userID} value={user.userID}>{user.firstName} {user.lastName}</option>)
                             })}
                         </select>

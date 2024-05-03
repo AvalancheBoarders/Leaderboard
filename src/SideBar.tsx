@@ -12,7 +12,7 @@ export function SideBar ({active, activeScreen, setScreen}: ISideBarProps) {
   return (
     <ul className={active ? 'sidebar active' : 'sidebar'}>
         <li className={activeScreen === 'home' ? 'menu-bar active' : 'menu-bar'} onClick={() => setScreen('home')}>Home</li>
-        <li className={activeScreen === 'login' ? 'menu-bar active' : 'menu-bar'} onClick={() => setScreen('login')}>Login</li>
+        <li className={activeScreen === 'login' ? 'menu-bar active' : 'menu-bar'} onClick={() => setScreen('login')}>Control panel</li>
     </ul>
   );
 }
