@@ -7,6 +7,7 @@ import './bill.css';
 import Button from './components/button/Button';
 import NotificationBox from './components/notification/NotificationBox';
 import useNotification from './components/notification/useNotification';
+import { formatDate } from './utils';
 
 export interface ICreateBillProps {
     users: User[];
@@ -112,7 +113,7 @@ export function CreateBill ({users}: ICreateBillProps) {
             <div className='bill-container'>
                 
                 <div className='bill-header'>
-                    <p>Current bill:</p><p>Date: {date}</p>
+                    <p>Current bill:</p><p>Date: {date !== null && formatDate(date)}</p>
                 </div>
                 {bill.map((item: UserDrinks) => {
                     const firstName = users.find((u: User) => u.userID === item.userID)?.firstName;
