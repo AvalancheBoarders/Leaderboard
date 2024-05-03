@@ -41,6 +41,16 @@ export function CreateBill ({users}: ICreateBillProps) {
         setBill((prev) => ([...prev, ud]))
     }
 
+    const RemoveExpense = (userID: string) => {
+        if (!bill.some((u: UserDrinks) => u.userID === userID)) {
+            showTemporarily("Couldnt find item", 'warning');
+            return;
+        }
+        
+        setBill((prev) => prev.filter((u: UserDrinks) => u.userID !== userID))
+        showTemporarily("Item removed", 'successful');
+    }
+
     const ClearBill = () => {
         console.log("clearbill")
         setDate(null);
@@ -57,6 +67,7 @@ export function CreateBill ({users}: ICreateBillProps) {
         }
         const newBill = bill.map((item) => ({...item, date: date}))
         await addDoc(billCollectionRef, {date: date, items: newBill.map((item) => ({userID: item.userID, quantity: item.quantity}))})
+        ClearBill()
         showTemporarily("Bill saved", 'successful');
         console.log("submit bill");
     }
@@ -93,7 +104,13 @@ export function CreateBill ({users}: ICreateBillProps) {
                 {bill.map((item: UserDrinks) => {
                     const firstName = users.find((u: User) => u.userID === item.userID)?.firstName;
                     return (
-                        <div className="bill-item" key={"lll" + item.userID + item.quantity}><p>{firstName}</p><p>{item.quantity}</p></div>
+                        <div className="bill-item" key={"lll" + item.userID + item.quantity}>
+                            <p>{firstName}</p>
+                            <div className='row'>
+                                <p>{item.quantity}</p>
+                                <Button onClick={() => RemoveExpense(item.userID)} text={'X'} theme='red-white'/>
+                            </div>
+                        </div>
                     )
                 })}
             </div>
