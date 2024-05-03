@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { IBill } from './App';
 import './bill.css';
+import { formatDate } from './utils';
 
 export interface IBillDisplayProps {
     bills: IBill[];
@@ -43,7 +44,7 @@ function Bill ({date, items} : IBill) {
 
     return (
         <div className="bill-container small">
-            <div className='bill-header'><p>Date: {date}</p></div>
+            <div className='bill-header'><p>Date: {formatDate(date)}</p></div>
             {items.map((item) => (
                 <div className="bill-item" key={"bill-item" + date + item.user.userID + item.quantity}>
                         <p key={item.user.firstName + date}>{item.user.firstName}</p>
