@@ -145,7 +145,7 @@ function App() {
                     </div>
                 </div> :
                 !authUser ? <SignIn/> : 
-                <>
+                <div>
                     <div className='signedin-container'>
                         <p>{`Signed In as ${authUser.email}`}</p>
                         <Button onClick={() => userSignOut()} text={'Sign out'}/>
@@ -159,7 +159,7 @@ function App() {
                         </div>
                         <UsersDisplay users={users}/>
                     </div>
-                </>
+                </div>
             }
             </div>
         </div>
