@@ -37,6 +37,19 @@ export function CreateBill ({users}: ICreateBillProps) {
             showTemporarily("No user to add", 'warning');
             return;
         }
+
+        if (bill.some((u: UserDrinks) => u.userID === userID)) {
+            setBill((prev) => prev.map((u: UserDrinks) => {
+                if (u.userID !== userID) {
+                    return u;
+                } else {
+                    // console.log(typeof u.quantity, typeof quantity)
+                    showTemporarily("Quanity accumulated", "warning")
+                    return {...u, quantity: u.quantity + quantity};
+                }
+            }))
+            return;
+        }
         const ud: UserDrinks = {billID: '1', userID: userID, quantity: quantity, date: date ? date : ""};
         setBill((prev) => ([...prev, ud]))
     }
@@ -46,7 +59,7 @@ export function CreateBill ({users}: ICreateBillProps) {
             showTemporarily("Couldnt find item", 'warning');
             return;
         }
-        
+
         setBill((prev) => prev.filter((u: UserDrinks) => u.userID !== userID))
         showTemporarily("Item removed", 'successful');
     }
@@ -88,7 +101,7 @@ export function CreateBill ({users}: ICreateBillProps) {
                                 return (<option key={"option" + user.userID} value={user.userID}>{user.firstName} {user.lastName}</option>)
                             })}
                         </select>
-                        <input placeholder="quantity..." type='number' onChange={(e:any) => {setQuantity(e.target.value)}}/>
+                        <input placeholder="quantity..." type='number' onChange={(e:any) => {setQuantity(parseInt(e.target.value))}}/>
                         <Button onClick={() => AddExpense()} text={'Add'}/>
                     </div>
                 </div>
