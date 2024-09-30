@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { auth, db } from './firebase-config';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
-import SignIn from './SignIn';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { UsersDisplay } from './UsersDisplay';
-import { CreateBill } from './CreateBill';
-import useNotificaiton from './components/notification/useNotification';
-import NotificationBox from './components/notification/NotificationBox';
-import Button from './components/button/Button';
+import { collection, getDocs } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 import { BillDisplay } from './BillDisplay';
 import { LeaderBoard } from './Leaderboard';
 import { SideBar } from './SideBar';
+import { ControlPanel } from './pages/ControlPanel';
 
 export interface User {
     userID: string;
@@ -28,14 +23,9 @@ export interface IBill {
     items: Item[]
 }
 
-export type Screen = "home" | "login";
+export type Screen = "home" | "login" | "mine";
 
 function App() {
-    console.log("Render App")
-    const [firstName, setFirstname] = useState<string>("");
-    const [lastName, setLastname] = useState<string>("");
-    const { notification, showTemporarily } = useNotificaiton()
-    
     const usersCollectionRef = collection(db, "users");
     const billsCollectionRef = collection(db, "bills");
     const [authUser, setAuthUser] = useState<any>(null);
@@ -85,20 +75,6 @@ function App() {
         getBills();
     }, [users])
 
-    const createUser = async () => {
-        if (firstName.trim() === "" || lastName.trim() === "") {
-            showTemporarily("Failed to add user - add name", 'error');
-            return;
-        }
-        await addDoc(usersCollectionRef, {firstName: firstName, lastName: lastName}).then(() => {
-            showTemporarily("User added", 'successful');
-            getUsers()
-        }).catch((err) => {
-            console.log(err);
-            showTemporarily("Failed to add user", 'error');
-        })
-    }
-
     useEffect(() => {
         const listen = onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -113,14 +89,6 @@ function App() {
         }
     }, []);
 
-    const userSignOut = () => {
-        signOut(auth).then(() => {
-            console.log("Signed out succesfully")
-        }).catch((err) => {
-            console.log(err);
-        })
-    }
-
     const handleSetScreen = (screen: Screen) => {
         showSidebar();
         setScreen(screen);
@@ -128,14 +96,13 @@ function App() {
 
     return (
         <div className="App">
-            <NotificationBox notification={notification}/>
             <SideBar active={sidebar} activeScreen={screen} setScreen={(screen: Screen) => handleSetScreen(screen)}/>
             <div className="content">
             <button className="hamburger-menu" type="button" onClick={() => showSidebar()}>
                 <svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>
             </button>
 
-            {screen === 'home' ? 
+            {screen === 'home' && 
                 <div className='avalanche-content'>
                     <div className="leaderboard-wrapper">
                         <LeaderBoard users={users} bills={bills}/>
@@ -143,24 +110,10 @@ function App() {
                     <div className='bill-wrapper'>
                         <BillDisplay bills={bills}/>
                     </div>
-                </div> :
-                !authUser ? <SignIn/> : 
-                <div>
-                    <div className='signedin-container'>
-                        <p>{`Signed In as ${authUser.email}`}</p>
-                        <Button onClick={() => userSignOut()} text={'Sign out'}/>
-                    </div>
-                    <CreateBill users={users}/>
-                    <div className='user-creation-container'>
-                        <div>
-                            <input placeholder="firstname..." onChange={(e) => {setFirstname(e.target.value)}}/>
-                            <input placeholder="lastname..." onChange={(e) => {setLastname(e.target.value)}}/>
-                            <Button onClick={() => createUser()} text={'Create User'}/>
-                        </div>
-                        <UsersDisplay users={users}/>
-                    </div>
                 </div>
-            }
+                }
+                {screen === 'login' && <ControlPanel users={users} authUser={authUser} getUsers={getUsers}/>}
+            {screen === 'mine' && <p>hoi</p>}
             </div>
         </div>
     );
