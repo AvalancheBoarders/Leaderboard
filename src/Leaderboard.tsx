@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { IBill, Item, User } from './App';
-import './leaderboard.css';
-import { useEffect, useMemo, useState } from 'react';
+import * as React from "react";
+import { IBill, Item, User } from "./App";
+import "./leaderboard.css";
+import { useEffect, useState } from "react";
 
 export interface ILeaderBoardProps {
     users: User[];
@@ -22,11 +22,11 @@ export interface LeaderBoardItem {
 }
 
 const aggregate = (bills: IBill[], users: any, yearSelected: string) => {
-    const leaderboard: UserDrinkData[] = []
+    const leaderboard: UserDrinkData[] = [];
     for (const bill of bills) {
-        const d = new Date(bill.date)
-        const dateCompare1 = new Date(yearSelected.concat("-08-01"))
-        const dateCompare2 = new Date((parseInt(yearSelected) + 1).toString().concat("-08-01"))
+        const d = new Date(bill.date);
+        const dateCompare1 = new Date(yearSelected.concat("-08-01"));
+        const dateCompare2 = new Date((parseInt(yearSelected) + 1).toString().concat("-08-01"));
         if (dateCompare1 < d && d < dateCompare2) {
             for (const item of bill.items) {
                 if (leaderboard.some((el: UserDrinkData) => el.user.userID === item.user.userID)) {
@@ -35,22 +35,33 @@ const aggregate = (bills: IBill[], users: any, yearSelected: string) => {
                             leaderboard[it].quantity += item.quantity;
                             leaderboard[it].quantityShots += item.quantityShots;
                             leaderboard[it].evenings += 1;
-                            if ((item.quantity + item.quantityShots) > leaderboard[it].maxInOneNight) {
+                            if (
+                                item.quantity + item.quantityShots >
+                                leaderboard[it].maxInOneNight
+                            ) {
                                 leaderboard[it].maxInOneNight = item.quantity + item.quantityShots;
                                 leaderboard[it].maxInOneNightBeers = item.quantity;
                                 leaderboard[it].maxInOneNightShots = item.quantityShots;
                             }
                             break;
                         }
-                      }
+                    }
                 } else {
-                    leaderboard.push({user: item.user, quantity: item.quantity, quantityShots: item.quantityShots, evenings: 1, maxInOneNight: item.quantity + item.quantityShots, maxInOneNightShots: item.quantityShots, maxInOneNightBeers: item.quantity})
+                    leaderboard.push({
+                        user: item.user,
+                        quantity: item.quantity,
+                        quantityShots: item.quantityShots,
+                        evenings: 1,
+                        maxInOneNight: item.quantity + item.quantityShots,
+                        maxInOneNightShots: item.quantityShots,
+                        maxInOneNightBeers: item.quantity,
+                    });
                 }
             }
         }
     }
     return leaderboard;
-}
+};
 
 enum LeaderBoardMode {
     MOST_DRINKS = 0,
@@ -61,27 +72,35 @@ enum LeaderBoardMode {
 
 const most_drinks_one_night = (drinkingStats: UserDrinkData[]) => {
     return drinkingStats.map((item) => {
-        return {user: item.user, quantity: item.maxInOneNightBeers, quantityShots: item.maxInOneNightShots};
+        return {
+            user: item.user,
+            quantity: item.maxInOneNightBeers,
+            quantityShots: item.maxInOneNightShots,
+        };
     });
-}
+};
 
 const most_drinks = (drinkingStats: UserDrinkData[]) => {
     return drinkingStats.map((item) => {
-        return {user: item.user, quantity: item.quantity, quantityShots: item.quantityShots};
+        return { user: item.user, quantity: item.quantity, quantityShots: item.quantityShots };
     });
-}
+};
 
 const most_evenings = (drinkingStats: UserDrinkData[]) => {
     return drinkingStats.map((item) => {
-        return {user: item.user, quantity: item.evenings, quantityShots: item.quantityShots};
+        return { user: item.user, quantity: item.evenings, quantityShots: item.quantityShots };
     });
-}
+};
 
 const most_drinks_ratio = (drinkingStats: UserDrinkData[]) => {
     return drinkingStats.map((item) => {
-        return {user: item.user, quantity: Math.round((item.quantity + item.quantityShots) * 10 / item.evenings) / 10, quantityShots: item.quantityShots};
+        return {
+            user: item.user,
+            quantity: Math.round(((item.quantity + item.quantityShots) * 10) / item.evenings) / 10,
+            quantityShots: item.quantityShots,
+        };
     });
-}
+};
 
 const compute_stats = (leaderboardMode: LeaderBoardMode, drinkingStats: UserDrinkData[]) => {
     let stats: LeaderBoardItem[];
@@ -99,73 +118,121 @@ const compute_stats = (leaderboardMode: LeaderBoardMode, drinkingStats: UserDrin
         stats = most_drinks_one_night(drinkingStats);
         label = "drinks";
     } else {
-        console.log("set default leaderboardmode")
+        console.log("set default leaderboardmode");
         stats = [];
         label = "";
     }
-    
-    const sorted = stats.sort((a, b) => (leaderboardMode === LeaderBoardMode.MOST_DRINKS_RATIO ? (b.quantity) - (a.quantity) : ((b.quantity + b.quantityShots)) - (a.quantity + a.quantityShots)))
-    return {label: label, maxStat: leaderboardMode === LeaderBoardMode.MOST_DRINKS_RATIO ? sorted[0]?.quantity : sorted[0]?.quantity + sorted[0]?.quantityShots, statsList: stats}
-}
 
-export function LeaderBoard ({users, bills}: ILeaderBoardProps) {
-    const [yearSelected, setYearSelected] = useState<string>((new Date()).getFullYear().toString());
-    const [drinkingStats, setDrinkingStats] = useState(aggregate(bills, users, yearSelected).sort((a, b) => (b.quantity + b.quantityShots) - (a.quantity + a.quantityShots)));
-    const totalDrinks = drinkingStats.reduce((partialSum, a) => partialSum + a.quantity, 0)
-    const [leaderboardMode, setLeaderboardMode] = useState<LeaderBoardMode>(LeaderBoardMode.MOST_DRINKS);
-    const [leaderboard, setLeaderboard] = useState<{maxStat: number, label: String, statsList: LeaderBoardItem[]}>({label: "drinks", maxStat:100, statsList: most_drinks(drinkingStats)});
+    const sorted = stats.sort((a, b) =>
+        leaderboardMode === LeaderBoardMode.MOST_DRINKS_RATIO
+            ? b.quantity - a.quantity
+            : b.quantity + b.quantityShots - (a.quantity + a.quantityShots)
+    );
+    return {
+        label: label,
+        maxStat:
+            leaderboardMode === LeaderBoardMode.MOST_DRINKS_RATIO
+                ? sorted[0]?.quantity
+                : sorted[0]?.quantity + sorted[0]?.quantityShots,
+        statsList: stats,
+    };
+};
+
+export function LeaderBoard({ users, bills }: ILeaderBoardProps) {
+    const [yearSelected, setYearSelected] = useState<string>(new Date().getFullYear().toString());
+    const [drinkingStats, setDrinkingStats] = useState(
+        aggregate(bills, users, yearSelected).sort(
+            (a, b) => b.quantity + b.quantityShots - (a.quantity + a.quantityShots)
+        )
+    );
+    const totalDrinks = drinkingStats.reduce((partialSum, a) => partialSum + a.quantity, 0);
+    const [leaderboardMode, setLeaderboardMode] = useState<LeaderBoardMode>(
+        LeaderBoardMode.MOST_DRINKS
+    );
+    const [leaderboard, setLeaderboard] = useState<{
+        maxStat: number;
+        label: string;
+        statsList: LeaderBoardItem[];
+    }>({ label: "drinks", maxStat: 100, statsList: most_drinks(drinkingStats) });
 
     const eves = bills.filter((item) => {
-        const d = new Date(item.date)
-        const dateCompare1 = new Date(yearSelected.concat("-08-01"))
-        const dateCompare2 = new Date((parseInt(yearSelected) + 1).toString().concat("-08-01"))
+        const d = new Date(item.date);
+        const dateCompare1 = new Date(yearSelected.concat("-08-01"));
+        const dateCompare2 = new Date((parseInt(yearSelected) + 1).toString().concat("-08-01"));
         if (dateCompare1 < d && d < dateCompare2) {
-            return true
+            return true;
         } else {
-            return false
+            return false;
         }
-    })
+    });
 
     const handleInput = (value: string) => {
         if (value.includes("20")) {
-            setYearSelected(() => value as string)
+            setYearSelected(() => value as string);
         } else {
-            setLeaderboardMode(() => parseInt(value) as LeaderBoardMode) // Hacky - value is a string of the enum number value
+            setLeaderboardMode(() => parseInt(value) as LeaderBoardMode); // Hacky - value is a string of the enum number value
         }
-    }
+    };
 
     useEffect(() => {
-        setLeaderboard(() => compute_stats(leaderboardMode, drinkingStats))
-    }, [leaderboardMode, drinkingStats])
+        setLeaderboard(() => compute_stats(leaderboardMode, drinkingStats));
+    }, [leaderboardMode, drinkingStats]);
 
     useEffect(() => {
-        setDrinkingStats(aggregate(bills, users, yearSelected).sort((a, b) => (b.quantity + b.quantityShots) - (a.quantity + a.quantityShots)))
-    }, [bills, users, yearSelected])
+        setDrinkingStats(
+            aggregate(bills, users, yearSelected).sort(
+                (a, b) => b.quantity + b.quantityShots - (a.quantity + a.quantityShots)
+            )
+        );
+    }, [bills, users, yearSelected]);
 
     // i think i need to be permanently banned from using inline logic
     return (
         <>
-            <div className='leaderboard-header'>
-                <h1 className='title'>Avalanche Drinking Leaderboard</h1>
-                <div className="progress-total">
-                        <div className="progress-fill" style={{width: `${(totalDrinks * 100) / 1500}%`}}></div>
+            <div className="leaderboard-header">
+                <h1 className="text-2xl font-bold text-center text-ava-primary">Avalanche Drinking Leaderboard</h1>
+                <div className="p-2">
+                    <div className="progress-total">
+                        <div
+                            className="progress-fill"
+                            style={{ width: `${(totalDrinks * 100) / 1500}%` }}
+                        ></div>
                         <span className="progress-text">Progress {totalDrinks} / 1500 drinks</span>
+                    </div>
                 </div>
-                <div className='leaderboard-subheader'>
-                    <div className='major-stats'>
-                        <div className='row'><p className='highlight'>Total drinks:</p><p>{totalDrinks}</p></div>
-                        <div className='row'><p className='highlight'>Evenings:</p><p>{eves.length}</p></div>
+                <div className="leaderboard-subheader">
+                    <div className="major-stats">
+                        <div className="row">
+                            <p className="highlight">Total drinks:</p>
+                            <p>{totalDrinks}</p>
+                        </div>
+                        <div className="row">
+                            <p className="highlight">Evenings:</p>
+                            <p>{eves.length}</p>
+                        </div>
                     </div>
                     <div className="selector-wrapper">
-                        <select className="leaderboard-select" onChange={(e) => handleInput(e.target.value)} value={yearSelected}>
-                            <option value={2023}>2023</option>
-                            <option value={2024}>2024</option>
-                        </select>
-                        <select className="leaderboard-select" onChange={(e) => handleInput(e.target.value)} value={leaderboardMode}>
+                        <select
+                            className="leaderboard-select"
+                            onChange={(e) => handleInput(e.target.value)}
+                            value={leaderboardMode}
+                        >
                             <option value={LeaderBoardMode.MOST_DRINKS}>Most drinks</option>
-                            <option value={LeaderBoardMode.MOST_DRINKS_ONE_NIGHT}>Most drinks in one night</option>
+                            <option value={LeaderBoardMode.MOST_DRINKS_ONE_NIGHT}>
+                                Most drinks in one night
+                            </option>
                             <option value={LeaderBoardMode.MOST_EVENINGS}>Most loyal member</option>
-                            <option value={LeaderBoardMode.MOST_DRINKS_RATIO}>Most drinks / night</option>
+                            <option value={LeaderBoardMode.MOST_DRINKS_RATIO}>
+                                Most drinks / night
+                            </option>
+                        </select>
+                        <select
+                            className="leaderboard-select"
+                            onChange={(e) => handleInput(e.target.value)}
+                            value={yearSelected}
+                        >
+                            <option value={2024}>2024</option>
+                            <option value={2023}>2023</option>
                         </select>
                     </div>
                 </div>
@@ -173,11 +240,42 @@ export function LeaderBoard ({users, bills}: ILeaderBoardProps) {
             <div className="leaderboard-container">
                 {leaderboard.statsList.map((leaderboardItem, idx) => (
                     <div className="leaderboard-item" key={leaderboardItem.user.userID}>
-                        <p className='leaderboard-username'>{idx+1}. {leaderboardItem.user.firstName}</p>
+                        <p className="leaderboard-username">
+                            {idx + 1}. {leaderboardItem.user.firstName}
+                        </p>
                         <div className="progress">
-                            <span className="progress-text left">{leaderboardMode === LeaderBoardMode.MOST_DRINKS_RATIO ? `${Math.round(leaderboardItem.quantity * 100 / (leaderboardItem.quantity + leaderboardItem.quantityShots))}% | ${100 - Math.round(leaderboardItem.quantity * 100 / (leaderboardItem.quantity + leaderboardItem.quantityShots))}%` : leaderboardMode !== LeaderBoardMode.MOST_EVENINGS ? `${leaderboardItem.quantity} | ${leaderboardItem.quantityShots}` : ""}</span>
-                            <div className="progress-fill" style={{width: `${((leaderboardMode === LeaderBoardMode.MOST_DRINKS_RATIO ? (leaderboardItem.quantity) : (leaderboardItem.quantity  + leaderboardItem.quantityShots)) * 100) / leaderboard.maxStat}%`, background: `${(leaderboardItem.quantityShots > 0 && leaderboardMode !== LeaderBoardMode.MOST_EVENINGS) ? `linear-gradient(to right, #009579 0%, #009579 ${(leaderboardItem.quantity * 100) / (leaderboardItem.quantity + leaderboardItem.quantityShots)}%, #fd5200 ${(leaderboardItem.quantity * 100) / (leaderboardItem.quantity + leaderboardItem.quantityShots)}%, #fd5200 100%)` : ``}`}}></div>
-                            <span className="progress-text">{leaderboardMode === LeaderBoardMode.MOST_DRINKS_RATIO ? leaderboardItem.quantity : leaderboardItem.quantity + leaderboardItem.quantityShots} {leaderboard.label}</span>
+                            <span className="progress-text left">
+                                {leaderboardMode === LeaderBoardMode.MOST_DRINKS_RATIO
+                                    ? `${Math.round((leaderboardItem.quantity * 100) / (leaderboardItem.quantity + leaderboardItem.quantityShots))}% | ${100 - Math.round((leaderboardItem.quantity * 100) / (leaderboardItem.quantity + leaderboardItem.quantityShots))}%`
+                                    : leaderboardMode !== LeaderBoardMode.MOST_EVENINGS
+                                      ? `${leaderboardItem.quantity} | ${leaderboardItem.quantityShots}`
+                                      : ""}
+                            </span>
+                            <div
+                                className="progress-fill"
+                                style={{
+                                    width: `${
+                                        ((leaderboardMode === LeaderBoardMode.MOST_DRINKS_RATIO
+                                            ? leaderboardItem.quantity
+                                            : leaderboardItem.quantity +
+                                              leaderboardItem.quantityShots) *
+                                            100) /
+                                        leaderboard.maxStat
+                                    }%`,
+                                    background: `${
+                                        leaderboardItem.quantityShots > 0 &&
+                                        leaderboardMode !== LeaderBoardMode.MOST_EVENINGS
+                                            ? `linear-gradient(to right, #009579 0%, #009579 ${(leaderboardItem.quantity * 100) / (leaderboardItem.quantity + leaderboardItem.quantityShots)}%, #05715dff ${(leaderboardItem.quantity * 100) / (leaderboardItem.quantity + leaderboardItem.quantityShots)}%, #05715dff 100%)`
+                                            : ``
+                                    }`,
+                                }}
+                            ></div>
+                            <span className="progress-text">
+                                {leaderboardMode === LeaderBoardMode.MOST_DRINKS_RATIO
+                                    ? leaderboardItem.quantity
+                                    : leaderboardItem.quantity + leaderboardItem.quantityShots}{" "}
+                                {leaderboard.label}
+                            </span>
                         </div>
                     </div>
                 ))}

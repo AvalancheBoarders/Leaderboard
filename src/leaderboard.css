@@ -9,21 +9,10 @@
     /* border: 1px solid black; */
 }
 
-/* .leaderboard-header {
-    height: 20dvh;
-} */
-
-.title {
-    color: #5bcbf5;
-    text-align: center;
-    /* font-size: 24px; */
-    /* font: bold 32px 'Quicksand', sans-serif; */
-}
-
 .major-stats {
     display: flex;
     flex-direction: column;
-    padding: 0.5rem 0.5rem 0.5rem 0rem;
+    /* padding: 0.5rem 0.5rem 0.5rem 0rem; */
     width: 10rem;
     font: bold 'Quicksand', sans-serif;
 }
@@ -37,21 +26,24 @@
     display: flex;
     flex-direction: row;
     padding: 0rem 0.5rem;
-    align-items: flex-end;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 0.25rem;
+    align-items: stretch;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
 }
 
 .selector-wrapper {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.2rem;
     width: 30%;
 }
 
 .leaderboard-select {
     padding: 0.0rem;
     margin-right: 0.5rem;
-    /* width: 50%; */
-    /* background-color: #5bcbf5; */
 }
 
 .leaderboard-select select {
@@ -89,8 +81,10 @@
     background-color: #9cbab4;
     border-radius: 5px;
     overflow: hidden;
-    margin-top: 1%;
-    margin-bottom: 1%;
+}
+
+.pr {
+    padding: 0.0rem 0.5rem;
 }
 
 .progress-fill {
