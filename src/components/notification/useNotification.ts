@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { type notifiactionType } from './Notification';
-import { Notification } from './Notification';
+import { useState } from "react";
+import { type notifiactionType } from "./Notification";
+import { Notification } from "./Notification";
 
 /**
  * Returns a notification object and various functions to show notifications in a certain way.
@@ -14,7 +14,7 @@ export default function useNotificaiton(): {
 } {
     const [notification, setNotification] = useState<Notification>({
         visible: false,
-        text: '',
+        text: "",
         type: Notification.defaultType(),
     });
 

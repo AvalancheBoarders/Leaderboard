@@ -1,6 +1,6 @@
-import * as React from 'react';
-import './notification.css';
-import { type Notification } from './Notification';
+import * as React from "react";
+import "./notification.css";
+import { type Notification } from "./Notification";
 
 export interface INotificationProps {
     notification: Notification;

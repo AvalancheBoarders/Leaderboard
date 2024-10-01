@@ -1,4 +1,4 @@
-export type notifiactionType = 'successful' | 'warning' | 'error';
+export type notifiactionType = "successful" | "warning" | "error";
 
 export class Notification {
     visible: boolean;
@@ -12,10 +12,10 @@ export class Notification {
     }
 
     static defaultType(): notifiactionType {
-        return 'successful';
+        return "successful";
     }
 
     static emptyNotification(): Notification {
-        return { visible: false, text: '', type: Notification.defaultType() };
+        return { visible: false, text: "", type: Notification.defaultType() };
     }
 }
