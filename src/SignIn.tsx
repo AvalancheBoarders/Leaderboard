@@ -4,11 +4,9 @@ import { auth } from './firebase-config';
 import Button from './components/button/Button';
 import NotificationBox from './components/notification/NotificationBox';
 import useNotificaiton from './components/notification/useNotification';
-// import './app.css';
 
-type Props = {}
 
-function SignIn({}: Props) {
+function SignIn() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const { notification, showTemporarily } = useNotificaiton()
