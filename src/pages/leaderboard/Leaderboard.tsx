@@ -1,6 +1,5 @@
 import * as React from "react";
-import { IBill, Item, User } from "./App";
-import "./leaderboard.css";
+import { IBill, Item, User } from "../../App";
 import { useEffect, useState } from "react";
 
 export interface ILeaderBoardProps {
@@ -35,10 +34,7 @@ const aggregate = (bills: IBill[], users: any, yearSelected: string) => {
                             leaderboard[it].quantity += item.quantity;
                             leaderboard[it].quantityShots += item.quantityShots;
                             leaderboard[it].evenings += 1;
-                            if (
-                                item.quantity + item.quantityShots >
-                                leaderboard[it].maxInOneNight
-                            ) {
+                            if (item.quantity + item.quantityShots > leaderboard[it].maxInOneNight) {
                                 leaderboard[it].maxInOneNight = item.quantity + item.quantityShots;
                                 leaderboard[it].maxInOneNightBeers = item.quantity;
                                 leaderboard[it].maxInOneNightShots = item.quantityShots;
@@ -146,9 +142,7 @@ export function LeaderBoard({ users, bills }: ILeaderBoardProps) {
         )
     );
     const totalDrinks = drinkingStats.reduce((partialSum, a) => partialSum + a.quantity, 0);
-    const [leaderboardMode, setLeaderboardMode] = useState<LeaderBoardMode>(
-        LeaderBoardMode.MOST_DRINKS
-    );
+    const [leaderboardMode, setLeaderboardMode] = useState<LeaderBoardMode>(LeaderBoardMode.MOST_DRINKS);
     const [leaderboard, setLeaderboard] = useState<{
         maxStat: number;
         label: string;
@@ -192,59 +186,50 @@ export function LeaderBoard({ users, bills }: ILeaderBoardProps) {
             <div className="leaderboard-header">
                 <h1 className="text-2xl font-bold text-center text-ava-primary">Avalanche Drinking Leaderboard</h1>
                 <div className="p-2">
-                    <div className="progress-total">
-                        <div
-                            className="progress-fill"
-                            style={{ width: `${(totalDrinks * 100) / 1500}%` }}
-                        ></div>
-                        <span className="progress-text">Progress {totalDrinks} / 1500 drinks</span>
+                    <div className="relative w-full h-7 bg-bar-bg rounded overflow-hidden">
+                        <div className="h-full bg-bar-fill" style={{ width: `${(totalDrinks * 100) / 1500}%` }}></div>
+                        <span className="right-1 text-white font-bold font-quick absolute top-1/2 -translate-y-1/2 text-sm">
+                            Progress {totalDrinks} / 1500 drinks
+                        </span>
                     </div>
                 </div>
-                <div className="leaderboard-subheader">
-                    <div className="major-stats">
+                <div className="flex flex-row p-2 justify-between items-center mb-1">
+                    <div className="flex flex-col w-40 font-quick">
                         <div className="row">
-                            <p className="highlight">Total drinks:</p>
+                            <Highlight text={"Total drinks:"} />
                             <p>{totalDrinks}</p>
                         </div>
                         <div className="row">
-                            <p className="highlight">Evenings:</p>
+                            <Highlight text={"Evenings:"} />
                             <p>{eves.length}</p>
                         </div>
                     </div>
-                    <div className="selector-wrapper">
+                    <div className="flex flex-col justify-between gap-1 w-4/12">
                         <select
-                            className="leaderboard-select"
+                            className="p-0 mr-2"
                             onChange={(e) => handleInput(e.target.value)}
                             value={leaderboardMode}
                         >
                             <option value={LeaderBoardMode.MOST_DRINKS}>Most drinks</option>
-                            <option value={LeaderBoardMode.MOST_DRINKS_ONE_NIGHT}>
-                                Most drinks in one night
-                            </option>
+                            <option value={LeaderBoardMode.MOST_DRINKS_ONE_NIGHT}>Most drinks in one night</option>
                             <option value={LeaderBoardMode.MOST_EVENINGS}>Most loyal member</option>
-                            <option value={LeaderBoardMode.MOST_DRINKS_RATIO}>
-                                Most drinks / night
-                            </option>
+                            <option value={LeaderBoardMode.MOST_DRINKS_RATIO}>Most drinks / night</option>
                         </select>
-                        <select
-                            className="leaderboard-select"
-                            onChange={(e) => handleInput(e.target.value)}
-                            value={yearSelected}
-                        >
+                        <select className="p-0 mr-2" onChange={(e) => handleInput(e.target.value)} value={yearSelected}>
                             <option value={2024}>2024</option>
                             <option value={2023}>2023</option>
                         </select>
                     </div>
                 </div>
             </div>
-            <div className="leaderboard-container">
+            <div className="overflow-y-auto">
                 {leaderboard.statsList.map((leaderboardItem, idx) => (
-                    <div className="leaderboard-item" key={leaderboardItem.user.userID}>
-                        <p className="leaderboard-username">
+                    <div className="flex flex-row justify-between px-2 py-02 gap-02" key={leaderboardItem.user.userID}>
+                        <p className="w-28 overflow-hidden text-nowrap">
                             {idx + 1}. {leaderboardItem.user.firstName}
                         </p>
-                        <div className="progress">
-                            <span className="progress-text left">
+                        <div className="relative w-full h-7 rounded overflow-hidden bg-bar-bg">
+                            <span className="left-1 text-white font-bold font-quick absolute top-1/2 -translate-y-1/2 text-sm">
                                 {leaderboardMode === LeaderBoardMode.MOST_DRINKS_RATIO
                                     ? `${Math.round((leaderboardItem.quantity * 100) / (leaderboardItem.quantity + leaderboardItem.quantityShots))}% | ${100 - Math.round((leaderboardItem.quantity * 100) / (leaderboardItem.quantity + leaderboardItem.quantityShots))}%`
                                     : leaderboardMode !== LeaderBoardMode.MOST_EVENINGS
@@ -252,13 +237,12 @@ export function LeaderBoard({ users, bills }: ILeaderBoardProps) {
                                       : ""}
                             </span>
                             <div
-                                className="progress-fill"
+                                className="h-full bg-bar-fill"
                                 style={{
                                     width: `${
                                         ((leaderboardMode === LeaderBoardMode.MOST_DRINKS_RATIO
                                             ? leaderboardItem.quantity
-                                            : leaderboardItem.quantity +
-                                              leaderboardItem.quantityShots) *
+                                            : leaderboardItem.quantity + leaderboardItem.quantityShots) *
                                             100) /
                                         leaderboard.maxStat
                                     }%`,
@@ -270,7 +254,7 @@ export function LeaderBoard({ users, bills }: ILeaderBoardProps) {
                                     }`,
                                 }}
                             ></div>
-                            <span className="progress-text">
+                            <span className="right-1 text-white font-bold font-quick absolute top-1/2 -translate-y-1/2 text-sm">
                                 {leaderboardMode === LeaderBoardMode.MOST_DRINKS_RATIO
                                     ? leaderboardItem.quantity
                                     : leaderboardItem.quantity + leaderboardItem.quantityShots}{" "}
@@ -282,4 +266,12 @@ export function LeaderBoard({ users, bills }: ILeaderBoardProps) {
             </div>
         </>
     );
+}
+
+export interface IHighlightProps {
+    text: string;
+}
+
+export function Highlight({ text }: IHighlightProps) {
+    return <p className="font-bold text-ava-primary">{text}</p>;
 }

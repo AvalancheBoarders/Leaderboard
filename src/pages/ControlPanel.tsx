@@ -1,15 +1,15 @@
 import * as React from "react";
-import SignIn from "../SignIn";
-import { UsersDisplay } from "../UsersDisplay";
+import { UsersDisplay } from "./controlpanel/UsersDisplay";
 import Button from "../components/button/Button";
-import { auth, db } from "./../firebase-config";
+import { auth, db } from "../firebase-config";
 import { signOut } from "firebase/auth";
-import { CreateBill } from "../CreateBill";
+import { CreateBill } from "./controlpanel/CreateBill";
 import { User } from "../App";
 import { useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
 import useNotificaiton from "../components/notification/useNotification";
 import NotificationBox from "../components/notification/NotificationBox";
+import SignIn from "./controlpanel/SignIn";
 
 export interface IControlPanelProps {
     users: User[];
@@ -58,12 +58,12 @@ export function ControlPanel({ authUser, users, getUsers }: IControlPanelProps) 
         return (
             <div>
                 <NotificationBox notification={notification} />
-                <div className="signedin-container">
+                <div className="flex flex-row border-gray-500 rounded border-4 p-2 gap-4">
                     <p>{`Signed In as ${authUser.email}`}</p>
                     <Button onClick={() => userSignOut()} text={"Sign out"} />
                 </div>
                 <CreateBill users={users} />
-                <div className="user-creation-container">
+                <div className="border-4 border-gray-500 p-4">
                     <div>
                         <input
                             placeholder="firstname..."
