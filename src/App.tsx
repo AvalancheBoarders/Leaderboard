@@ -22,6 +22,7 @@ export interface User {
 export interface Item {
     user: User;
     quantity: number;
+    quantityShots: number;
 }
 export interface IBill {
     date: string;
@@ -69,7 +70,8 @@ function App() {
                 if (user === null || user === undefined) {
                     return {};
                 }
-                const newItem: Item = {quantity: parseInt(item.quantity), user: user}
+                console.log(item.quantityShots)
+                const newItem: Item = {quantity: parseInt(item.quantity), quantityShots: item.quantityShots === undefined ? 0 : parseInt(item.quantityShots), user: user}
                 return newItem;
             })
             const newBill: IBill = {date: date, items: newItems};

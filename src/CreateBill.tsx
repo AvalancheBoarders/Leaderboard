@@ -8,6 +8,7 @@ import Button from './components/button/Button';
 import NotificationBox from './components/notification/NotificationBox';
 import useNotification from './components/notification/useNotification';
 import { formatDate } from './utils';
+import { NumberLiteralType } from 'typescript';
 
 export interface ICreateBillProps {
     users: User[];
@@ -17,6 +18,7 @@ interface UserDrinks {
     billID: string;
     userID: string;
     quantity: number;
+    quantityShots: number;
     date: string;
 }
 
@@ -27,6 +29,7 @@ export function CreateBill ({users}: ICreateBillProps) {
     const [userID, setUserID] = useState<string>("default");
     const [date, setDate] = useState<string | null>(null);
     const [quantity, setQuantity] = useState<number>(0);
+    const [quantityShots, setQuantityShots] = useState<number>(0);
     const [bill, setBill] = useState<UserDrinks[]>([]);
 
     const createUser = async () => {
@@ -51,7 +54,7 @@ export function CreateBill ({users}: ICreateBillProps) {
             }))
             return;
         }
-        const ud: UserDrinks = {billID: '1', userID: userID, quantity: quantity, date: date ? date : ""};
+        const ud: UserDrinks = {billID: '1', userID: userID, quantity: quantity, quantityShots: quantityShots, date: date ? date : ""};
         setBill((prev) => ([...prev, ud]))
     }
 
@@ -80,7 +83,7 @@ export function CreateBill ({users}: ICreateBillProps) {
             return;
         }
         const newBill = bill.map((item) => ({...item, date: date}))
-        await addDoc(billCollectionRef, {date: date, items: newBill.map((item) => ({userID: item.userID, quantity: item.quantity}))})
+        await addDoc(billCollectionRef, {date: date, items: newBill.map((item) => ({userID: item.userID, quantity: item.quantity, quantityShots: item.quantityShots}))})
         ClearBill()
         showTemporarily("Bill saved", 'successful');
         console.log("submit bill");
@@ -102,7 +105,8 @@ export function CreateBill ({users}: ICreateBillProps) {
                                 return (<option key={"option" + user.userID} value={user.userID}>{user.firstName} {user.lastName}</option>)
                             })}
                         </select>
-                        <input placeholder="quantity..." type='number' onChange={(e:any) => {setQuantity(parseInt(e.target.value))}}/>
+                        <input placeholder="beers quantity..." type='number' onChange={(e:any) => {setQuantity(parseInt(e.target.value))}}/>
+                        <input placeholder="shots quantity..." type='number' onChange={(e:any) => {setQuantityShots(parseInt(e.target.value))}}/>
                         <Button onClick={() => AddExpense()} text={'Add'}/>
                     </div>
                 </div>
@@ -122,6 +126,7 @@ export function CreateBill ({users}: ICreateBillProps) {
                             <p>{firstName}</p>
                             <div className='row'>
                                 <p>{item.quantity}</p>
+                                <p>{item.quantityShots}</p>
                                 <Button onClick={() => RemoveExpense(item.userID)} text={'X'} theme='red-white'/>
                             </div>
                         </div>

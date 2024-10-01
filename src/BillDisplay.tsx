@@ -48,7 +48,7 @@ function Bill ({date, items} : IBill) {
             {items.map((item) => (
                 <div className="bill-item" key={"bill-item" + date + item.user.userID + item.quantity}>
                         <p key={item.user.firstName + date}>{item.user.firstName}</p>
-                        <p key={item.user.firstName + date + item.quantity}>{item.quantity}</p>
+                        <p key={item.user.firstName + date + item.quantity}>{item.quantity + " | " + item.quantityShots}</p>
                 </div>
             ))}
             
