@@ -1,8 +1,8 @@
 import * as React from "react";
-import { User } from "../../App";
+import { IUser } from "../../models/models";
 
 export interface IUsersDisplayProps {
-    users: User[];
+    users: IUser[];
 }
 
 export function UsersDisplay({ users }: IUsersDisplayProps) {
@@ -10,7 +10,7 @@ export function UsersDisplay({ users }: IUsersDisplayProps) {
         <div className="flex flex-col items-start p-4">
             <p>Users in database</p>
             <div className="user-list">
-                {users.map((u: User) => (
+                {users.map((u: IUser) => (
                     <p className="px-2 py-0" key={"userID" + u.userID}>
                         {u.firstName} {u.lastName} - {u.userID}
                     </p>

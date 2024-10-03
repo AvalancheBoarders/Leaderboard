@@ -2,22 +2,14 @@ import { addDoc, collection } from "firebase/firestore";
 import * as React from "react";
 import { db } from "../../firebase-config";
 import { useState } from "react";
-import { User } from "../../App";
 import Button from "../../components/button/Button";
 import NotificationBox from "../../components/notification/NotificationBox";
 import useNotification from "../../components/notification/useNotification";
 import { formatDate } from "../../utils";
+import { IUser, IUserDrinks } from "../../models/models";
 
 export interface ICreateBillProps {
-    users: User[];
-}
-
-interface UserDrinks {
-    billID: string;
-    userID: string;
-    quantity: number;
-    quantityShots: number;
-    date: string;
+    users: IUser[];
 }
 
 export function CreateBill({ users }: ICreateBillProps) {
@@ -28,7 +20,7 @@ export function CreateBill({ users }: ICreateBillProps) {
     const [date, setDate] = useState<string | null>(null);
     const [quantity, setQuantity] = useState<number>(0);
     const [quantityShots, setQuantityShots] = useState<number>(0);
-    const [bill, setBill] = useState<UserDrinks[]>([]);
+    const [bill, setBill] = useState<IUserDrinks[]>([]);
 
     const createUser = async () => {
         await addDoc(billCollectionRef, { date: date });
@@ -40,9 +32,9 @@ export function CreateBill({ users }: ICreateBillProps) {
             return;
         }
 
-        if (bill.some((u: UserDrinks) => u.userID === userID)) {
+        if (bill.some((u: IUserDrinks) => u.userID === userID)) {
             setBill((prev) =>
-                prev.map((u: UserDrinks) => {
+                prev.map((u: IUserDrinks) => {
                     if (u.userID !== userID) {
                         return u;
                     } else {
@@ -54,7 +46,7 @@ export function CreateBill({ users }: ICreateBillProps) {
             );
             return;
         }
-        const ud: UserDrinks = {
+        const ud: IUserDrinks = {
             billID: "1",
             userID: userID,
             quantity: quantity,
@@ -65,12 +57,12 @@ export function CreateBill({ users }: ICreateBillProps) {
     };
 
     const RemoveExpense = (userID: string) => {
-        if (!bill.some((u: UserDrinks) => u.userID === userID)) {
+        if (!bill.some((u: IUserDrinks) => u.userID === userID)) {
             showTemporarily("Couldnt find item", "warning");
             return;
         }
 
-        setBill((prev) => prev.filter((u: UserDrinks) => u.userID !== userID));
+        setBill((prev) => prev.filter((u: IUserDrinks) => u.userID !== userID));
         showTemporarily("Item removed", "successful");
     };
 
@@ -126,7 +118,7 @@ export function CreateBill({ users }: ICreateBillProps) {
                                     Choose here
                                 </option>
                                 {users
-                                    .sort((a: User, b: User) => (a.firstName > b.firstName ? 1 : -1))
+                                    .sort((a: IUser, b: IUser) => (a.firstName > b.firstName ? 1 : -1))
                                     .map((user) => {
                                         return (
                                             <option key={"option" + user.userID} value={user.userID}>
@@ -160,8 +152,8 @@ export function CreateBill({ users }: ICreateBillProps) {
                         <p>Current bill:</p>
                         <p>Date: {date !== null && formatDate(date)}</p>
                     </div>
-                    {bill.map((item: UserDrinks) => {
-                        const firstName = users.find((u: User) => u.userID === item.userID)?.firstName;
+                    {bill.map((item: IUserDrinks) => {
+                        const firstName = users.find((u: IUser) => u.userID === item.userID)?.firstName;
                         return (
                             <div
                                 className="flex flex-row justify-between p-2 border-b-2 border-ava-primary"

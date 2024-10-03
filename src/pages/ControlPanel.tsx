@@ -4,15 +4,15 @@ import Button from "../components/button/Button";
 import { auth, db } from "../firebase-config";
 import { signOut } from "firebase/auth";
 import { CreateBill } from "./controlpanel/CreateBill";
-import { User } from "../App";
 import { useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
 import useNotificaiton from "../components/notification/useNotification";
 import NotificationBox from "../components/notification/NotificationBox";
 import SignIn from "./controlpanel/SignIn";
+import { IUser } from "../models/models";
 
 export interface IControlPanelProps {
-    users: User[];
+    users: IUser[];
     getUsers: () => void;
     authUser: any;
 }

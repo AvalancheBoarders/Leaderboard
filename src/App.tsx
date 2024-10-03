@@ -6,22 +6,7 @@ import { SideBar } from "./pages/SideBar";
 import { ControlPanel } from "./pages/ControlPanel";
 import { HamburgerMenu } from "./pages/HamburgerMenu";
 import { Home } from "./pages/Home";
-
-export interface User {
-    userID: string;
-    firstName: string;
-    lastName: string;
-}
-
-export interface Item {
-    user: User;
-    quantity: number;
-    quantityShots: number;
-}
-export interface IBill {
-    date: string;
-    items: Item[];
-}
+import { IBill, IBillLine, IUser } from "./models/models";
 
 export type Screen = "home" | "login" | "mine";
 
@@ -29,7 +14,7 @@ function App() {
     const usersCollectionRef = collection(db, "users");
     const billsCollectionRef = collection(db, "bills");
     const [authUser, setAuthUser] = useState<any>(null);
-    const [users, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<IUser[]>([]);
     const [bills, setBills] = useState<IBill[]>([]);
     const [sidebar, setSidebar] = useState(false);
     const [screen, setScreen] = useState<Screen>("home");
@@ -41,7 +26,7 @@ function App() {
         const dataUsers: any = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
         setUsers(
             dataUsers.map((user: any) => {
-                const u: User = {
+                const u: IUser = {
                     userID: user.id,
                     firstName: user.firstName,
                     lastName: user.lastName,
@@ -63,13 +48,13 @@ function App() {
         setBills(
             dataBills.map((bill: any) => {
                 const date = bill.date;
-                const newItems: Item[] = bill.items.map((item: any) => {
+                const newItems: IBillLine[] = bill.items.map((item: any) => {
                     const user = users.find((u) => u.userID === item.userID);
                     if (user === null || user === undefined) {
                         return {};
                     }
                     console.log(item.quantityShots);
-                    const newItem: Item = {
+                    const newItem: IBillLine = {
                         quantity: parseInt(item.quantity),
                         quantityShots: item.quantityShots === undefined ? 0 : parseInt(item.quantityShots),
                         user: user,
