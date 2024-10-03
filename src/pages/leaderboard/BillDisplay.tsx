@@ -1,6 +1,6 @@
 import * as React from "react";
-import { IBill } from "../../App";
 import { formatDate } from "../../utils";
+import { IBill } from "../../models/models";
 
 export interface IBillDisplayProps {
     bills: IBill[];

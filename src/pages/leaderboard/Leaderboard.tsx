@@ -1,34 +1,21 @@
 import * as React from "react";
-import { IBill, Item, User } from "../../App";
 import { useEffect, useState } from "react";
+import { IBill, ILeaderBoardItem, IUser, IUserDrinkData } from "../../models/models";
 
 export interface ILeaderBoardProps {
-    users: User[];
+    users: IUser[];
     bills: IBill[];
 }
 
-interface UserDrinkData extends Item {
-    evenings: number;
-    maxInOneNight: number;
-    maxInOneNightShots: number;
-    maxInOneNightBeers: number;
-}
-
-export interface LeaderBoardItem {
-    user: User;
-    quantity: number;
-    quantityShots: number;
-}
-
 const aggregate = (bills: IBill[], users: any, yearSelected: string) => {
-    const leaderboard: UserDrinkData[] = [];
+    const leaderboard: IUserDrinkData[] = [];
     for (const bill of bills) {
         const d = new Date(bill.date);
         const dateCompare1 = new Date(yearSelected.concat("-08-01"));
         const dateCompare2 = new Date((parseInt(yearSelected) + 1).toString().concat("-08-01"));
         if (dateCompare1 < d && d < dateCompare2) {
             for (const item of bill.items) {
-                if (leaderboard.some((el: UserDrinkData) => el.user.userID === item.user.userID)) {
+                if (leaderboard.some((el: IUserDrinkData) => el.user.userID === item.user.userID)) {
                     for (const it in leaderboard) {
                         if (leaderboard[it].user.userID === item.user.userID) {
                             leaderboard[it].quantity += item.quantity;
@@ -66,7 +53,7 @@ enum LeaderBoardMode {
     MOST_DRINKS_RATIO = 3,
 }
 
-const most_drinks_one_night = (drinkingStats: UserDrinkData[]) => {
+const most_drinks_one_night = (drinkingStats: IUserDrinkData[]) => {
     return drinkingStats.map((item) => {
         return {
             user: item.user,
@@ -76,19 +63,19 @@ const most_drinks_one_night = (drinkingStats: UserDrinkData[]) => {
     });
 };
 
-const most_drinks = (drinkingStats: UserDrinkData[]) => {
+const most_drinks = (drinkingStats: IUserDrinkData[]) => {
     return drinkingStats.map((item) => {
         return { user: item.user, quantity: item.quantity, quantityShots: item.quantityShots };
     });
 };
 
-const most_evenings = (drinkingStats: UserDrinkData[]) => {
+const most_evenings = (drinkingStats: IUserDrinkData[]) => {
     return drinkingStats.map((item) => {
         return { user: item.user, quantity: item.evenings, quantityShots: item.quantityShots };
     });
 };
 
-const most_drinks_ratio = (drinkingStats: UserDrinkData[]) => {
+const most_drinks_ratio = (drinkingStats: IUserDrinkData[]) => {
     return drinkingStats.map((item) => {
         return {
             user: item.user,
@@ -98,8 +85,8 @@ const most_drinks_ratio = (drinkingStats: UserDrinkData[]) => {
     });
 };
 
-const compute_stats = (leaderboardMode: LeaderBoardMode, drinkingStats: UserDrinkData[]) => {
-    let stats: LeaderBoardItem[];
+const compute_stats = (leaderboardMode: LeaderBoardMode, drinkingStats: IUserDrinkData[]) => {
+    let stats: ILeaderBoardItem[];
     let label: string;
     if (leaderboardMode === LeaderBoardMode.MOST_DRINKS) {
         stats = most_drinks(drinkingStats);
@@ -146,7 +133,7 @@ export function LeaderBoard({ users, bills }: ILeaderBoardProps) {
     const [leaderboard, setLeaderboard] = useState<{
         maxStat: number;
         label: string;
-        statsList: LeaderBoardItem[];
+        statsList: ILeaderBoardItem[];
     }>({ label: "drinks", maxStat: 100, statsList: most_drinks(drinkingStats) });
 
     const eves = bills.filter((item) => {

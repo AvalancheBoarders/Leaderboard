@@ -1,10 +1,10 @@
 import * as React from "react";
-import { IBill, User } from "../App";
 import { LeaderBoard } from "./leaderboard/Leaderboard";
 import { BillDisplay } from "./leaderboard/BillDisplay";
+import { IUser, IBill } from "../models/models";
 
 export interface IHomeProps {
-    users: User[];
+    users: IUser[];
     bills: IBill[];
 }
 
