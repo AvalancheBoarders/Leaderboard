@@ -48,3 +48,10 @@ export interface IUserDrinks {
     quantityShots: number;
     date: string;
 }
+
+export enum LeaderBoardMode {
+    MOST_DRINKS = 0,
+    MOST_EVENINGS = 1,
+    MOST_DRINKS_ONE_NIGHT = 2,
+    MOST_DRINKS_RATIO = 3,
+}

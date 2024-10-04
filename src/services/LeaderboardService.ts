@@ -1,6 +1,4 @@
-import { IBill, ILeaderboard, ILeaderboardItem, IUserDrinkData } from "../models/models";
-import { LeaderBoardMode } from "../pages/leaderboard/Leaderboard";
-import { MathService } from "./MathService";
+import { IBill, ILeaderboard, ILeaderboardItem, IUserDrinkData, LeaderBoardMode } from "../models/models";
 import { UtilService } from "./UtilService";
 
 export class LeaderboardService {
@@ -47,7 +45,7 @@ export class LeaderboardService {
         const total = UtilService.sum(values);
         if (percentage) {
             return values
-                .reduce((prev, curr) => prev + `${MathService.round(100 * (curr / total), 0)}% | `, "")
+                .reduce((prev, curr) => prev + `${UtilService.round(100 * (curr / total), 0)}% | `, "")
                 .slice(0, -3);
         }
         return values.reduce((prev, curr) => prev + `${curr} | `, "").slice(0, -3);
@@ -86,11 +84,11 @@ export class LeaderboardService {
             return {
                 user: item.user,
                 values: [
-                    MathService.round(item.quantity / item.evenings, 1),
-                    MathService.round(item.quantityShots / item.evenings, 1),
+                    UtilService.round(item.quantity / item.evenings, 1),
+                    UtilService.round(item.quantityShots / item.evenings, 1),
                 ],
                 sublabel: this.formatValueDivision([item.quantity, item.quantityShots], true),
-                label: `${MathService.round((item.quantity + item.quantityShots) / item.evenings, 1)} d/n`,
+                label: `${UtilService.round((item.quantity + item.quantityShots) / item.evenings, 1)} d/n`,
             };
         });
     }

@@ -53,7 +53,7 @@ function App() {
                     if (user === null || user === undefined) {
                         return {};
                     }
-                    console.log(item.quantityShots);
+
                     const newItem: IBillLine = {
                         quantity: parseInt(item.quantity),
                         quantityShots: item.quantityShots === undefined ? 0 : parseInt(item.quantityShots),
@@ -99,7 +99,7 @@ function App() {
             <SideBar active={sidebar} activeScreen={screen} setScreen={(screen: Screen) => handleSetScreen(screen)} />
             <div className="w-full sm:w-1/2">
                 <HamburgerMenu showSidebar={showSidebar} />
-                {screen === "home" && <Home users={users} bills={bills} />}
+                {screen === "home" && <Home bills={bills} />}
                 {screen === "login" && <ControlPanel users={users} authUser={authUser} getUsers={getUsers} />}
                 {screen === "mine" && <p>hoi</p>}
             </div>

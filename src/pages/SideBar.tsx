@@ -20,9 +20,9 @@ export function SideBar({ active, activeScreen, setScreen }: ISideBarProps) {
             >
                 Control panel
             </li>
-            <li className={activeScreen === "mine" ? "menu-bar active" : "menu-bar"} onClick={() => setScreen("mine")}>
+            {/* <li className={activeScreen === "mine" ? "menu-bar active" : "menu-bar"} onClick={() => setScreen("mine")}>
                 Mine!
-            </li>
+            </li> */}
         </ul>
     );
 }
