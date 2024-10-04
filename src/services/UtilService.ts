@@ -33,4 +33,8 @@ export class UtilService {
         const day = parseInt(yearMonthDay[2]);
         return day + " " + monthNamesAbr[month - 1] + " " + year;
     }
+
+    public static withinDates(date: Date, dates: [Date, Date]): boolean {
+        return dates[0] < date && date < dates[1];
+    }
 }

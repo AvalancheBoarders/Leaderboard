@@ -2,13 +2,10 @@ import { IBill, ILeaderboard, ILeaderboardItem, IUserDrinkData, LeaderBoardMode 
 import { UtilService } from "./UtilService";
 
 export class LeaderboardService {
-    public static aggregate(bills: IBill[], yearSelected: string): IUserDrinkData[] {
+    public static aggregate(bills: IBill[], dates: [Date, Date]): IUserDrinkData[] {
         const leaderboard: IUserDrinkData[] = [];
         for (const bill of bills) {
-            const d = new Date(bill.date);
-            const dateCompare1 = new Date(yearSelected.concat("-08-01"));
-            const dateCompare2 = new Date((parseInt(yearSelected) + 1).toString().concat("-08-01"));
-            if (dateCompare1 < d && d < dateCompare2) {
+            if (UtilService.withinDates(new Date(bill.date), dates)) {
                 for (const item of bill.items) {
                     if (leaderboard.some((el: IUserDrinkData) => el.user.userID === item.user.userID)) {
                         for (const it in leaderboard) {
