@@ -5,8 +5,8 @@ import { useState } from "react";
 import Button from "../../components/button/Button";
 import NotificationBox from "../../components/notification/NotificationBox";
 import useNotification from "../../components/notification/useNotification";
-import { formatDate } from "../../utils";
 import { IUser, IUserDrinks } from "../../models/models";
+import { UtilService } from "../../services/UtilService";
 
 export interface ICreateBillProps {
     users: IUser[];
@@ -150,7 +150,7 @@ export function CreateBill({ users }: ICreateBillProps) {
                 <div className="bg-slate-100 p-4">
                     <div className="flex flex-row font-bold">
                         <p>Current bill:</p>
-                        <p>Date: {date !== null && formatDate(date)}</p>
+                        <p>Date: {date !== null && UtilService.formatDate(date)}</p>
                     </div>
                     {bill.map((item: IUserDrinks) => {
                         const firstName = users.find((u: IUser) => u.userID === item.userID)?.firstName;
