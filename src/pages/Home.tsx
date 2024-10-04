@@ -5,31 +5,28 @@ import { IBill, ILeaderboard, IUserDrinkData, LeaderBoardMode } from "../models/
 import { useState } from "react";
 import { LeaderboardService } from "../services/LeaderboardService";
 import { Highlight } from "../components/highlight/Highlight";
+import { UtilService } from "../services/UtilService";
 
 export interface IHomeProps {
     bills: IBill[];
 }
 
+const academicYears: { [index: string]: [Date, Date] } = {
+    "23-24": [new Date("2023-09-01"), new Date("2024-08-14")],
+    "24-25": [new Date("2024-09-01"), new Date("2025-09-01")],
+};
+
 export function Home({ bills }: IHomeProps) {
-    const [yearSelected, setYearSelected] = useState<string>("2024");
+    const [yearSelected, setYearSelected] = useState<string>("24-25");
     const [leaderboardMode, setLeaderboardMode] = useState<LeaderBoardMode>(LeaderBoardMode.MOST_DRINKS);
 
     const [drinkingStats, setDrinkingStats] = useState<IUserDrinkData[]>(
-        LeaderboardService.aggregate(bills, yearSelected)
+        LeaderboardService.aggregate(bills, academicYears[yearSelected])
     );
     const [leaderboard, setLeaderboard] = useState<ILeaderboard>({ values: [], max: 0 });
     const [totalDrinks, setTotalDrinks] = useState(drinkingStats.reduce((partialSum, a) => partialSum + a.quantity, 0));
 
-    const eves = bills.filter((item) => {
-        const d = new Date(item.date);
-        const dateCompare1 = new Date(yearSelected.concat("-08-01"));
-        const dateCompare2 = new Date((parseInt(yearSelected) + 1).toString().concat("-08-01"));
-        if (dateCompare1 < d && d < dateCompare2) {
-            return true;
-        } else {
-            return false;
-        }
-    });
+    const eves = bills.filter((item) => UtilService.withinDates(new Date(item.date), academicYears[yearSelected]));
 
     const handleYearInput = (value: string) => {
         setYearSelected(() => value as string);
@@ -48,7 +45,7 @@ export function Home({ bills }: IHomeProps) {
     }, [leaderboardMode, drinkingStats]);
 
     React.useEffect(() => {
-        setDrinkingStats(LeaderboardService.aggregate(bills, yearSelected));
+        setDrinkingStats(LeaderboardService.aggregate(bills, academicYears[yearSelected]));
     }, [bills, yearSelected]);
 
     return (
@@ -94,8 +91,8 @@ export function Home({ bills }: IHomeProps) {
                                 onChange={(e) => handleYearInput(e.target.value)}
                                 value={yearSelected}
                             >
-                                <option value={2024}>2024</option>
-                                <option value={2023}>2023</option>
+                                <option value={"24-25"}>2024</option>
+                                <option value={"23-24"}>2023</option>
                             </select>
                         </div>
                     </div>
