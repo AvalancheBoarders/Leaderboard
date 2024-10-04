@@ -29,6 +29,18 @@ export interface ILeaderBoardItem {
     quantityShots: number;
 }
 
+export interface ILeaderboard {
+    values: ILeaderboardItem[];
+    max: number;
+}
+
+export interface ILeaderboardItem {
+    user: IUser;
+    values: number[];
+    sublabel: string | null;
+    label: string;
+}
+
 export interface IUserDrinks {
     billID: string;
     userID: string;
