@@ -19,6 +19,7 @@
     z-index: 100;
     height: 100dvh;
     display: flex;
+    position: relative;
     background-color: #5bcbf5;
     position: fixed;
     justify-content: flex-start;

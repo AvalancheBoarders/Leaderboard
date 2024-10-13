@@ -8,7 +8,7 @@ import { HamburgerMenu } from "./pages/HamburgerMenu";
 import { Home } from "./pages/Home";
 import { IBill, IBillLine, IUser } from "./models/models";
 
-export type Screen = "home" | "login" | "mine";
+export type Screen = "home" | "login" | "mine" | "settings";
 
 function App() {
     const usersCollectionRef = collection(db, "users");
