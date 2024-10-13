@@ -55,3 +55,10 @@ export enum LeaderBoardMode {
     MOST_DRINKS_ONE_NIGHT = 2,
     MOST_DRINKS_RATIO = 3,
 }
+
+export interface IFeature {
+    id: string;
+    name: string;
+    value: string;
+    active: boolean;
+}

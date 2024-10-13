@@ -5,11 +5,12 @@ import { auth, db } from "../firebase-config";
 import { signOut } from "firebase/auth";
 import { CreateBill } from "./controlpanel/CreateBill";
 import { useState } from "react";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import useNotificaiton from "../components/notification/useNotification";
 import NotificationBox from "../components/notification/NotificationBox";
 import SignIn from "./controlpanel/SignIn";
-import { IUser } from "../models/models";
+import { IFeature, IUser } from "../models/models";
+import { useFeatures } from "../services/useFeatures";
 
 export interface IControlPanelProps {
     users: IUser[];
@@ -19,6 +20,7 @@ export interface IControlPanelProps {
 
 export function ControlPanel({ authUser, users, getUsers }: IControlPanelProps) {
     const usersCollectionRef = collection(db, "users");
+    const { features } = useFeatures();
     const { notification, showTemporarily } = useNotificaiton();
     const [firstName, setFirstname] = useState<string>("");
     const [lastName, setLastname] = useState<string>("");
@@ -52,6 +54,18 @@ export function ControlPanel({ authUser, users, getUsers }: IControlPanelProps) 
             });
     };
 
+    const handleFeatureActiveToggle = async (feature: IFeature) => {
+        await updateDoc(doc(db, "features", feature.id), {
+            active: !feature.active,
+        })
+            .then((res) => {
+                showTemporarily("Activeness toggled", "successful");
+            })
+            .catch((e) => {
+                showTemporarily("oopsie failed", "error");
+            });
+    };
+
     if (authUser === null) {
         return <SignIn />;
     } else {
@@ -80,6 +94,17 @@ export function ControlPanel({ authUser, users, getUsers }: IControlPanelProps) 
                         <Button onClick={() => createUser()} text={"Create User"} />
                     </div>
                     <UsersDisplay users={users} />
+                </div>
+                <div>
+                    {features.map((f) => (
+                        <div className="border-4 border-gray-500 p-4">
+                            <div className="flex flex-row gap-2">
+                                <p>{f.name}</p> <p>{f.value}</p>
+                                <p>{f.active ? "true" : "false"}</p>
+                                <Button onClick={() => handleFeatureActiveToggle(f)} text={"toggle active"} />
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         );
