@@ -3,7 +3,7 @@ import { IFeature } from "../models/models";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config";
 
-export function useFeatures(): { features: IFeature[]; getColor: () => IFeature | null } {
+export function useFeatures(): { features: IFeature[]; getColor: (features: IFeature[]) => IFeature | null } {
     const [features, setFeatures] = useState<IFeature[]>([]);
 
     const getFeatures = async () => {
@@ -22,7 +22,7 @@ export function useFeatures(): { features: IFeature[]; getColor: () => IFeature 
         );
     };
 
-    const getColor = (): IFeature | null => {
+    const getColor = (features: IFeature[]): IFeature | null => {
         const colorFeature = features.filter((f) => f.name === "color");
         if (colorFeature.length !== 1) {
             return null;

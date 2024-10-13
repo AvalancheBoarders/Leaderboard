@@ -9,7 +9,7 @@ export interface ILeaderBoardProps {
 }
 
 export function LeaderBoard({ leaderboard }: ILeaderBoardProps) {
-    const { getColor } = useFeatures();
+    const { features, getColor } = useFeatures();
 
     return (
         <div className="overflow-y-auto">
@@ -28,7 +28,7 @@ export function LeaderBoard({ leaderboard }: ILeaderBoardProps) {
                                 width: `${100 * (UtilService.sum(leaderboardItem.values) / leaderboard.max)}%`,
                                 background: LeaderboardService.stackedBarsBackground(leaderboardItem.values, [
                                     "#009579",
-                                    getColor()?.value ?? "#05715d",
+                                    getColor(features)?.value ?? "#05715d",
                                 ]),
                             }}
                         ></div>

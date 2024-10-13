@@ -11,6 +11,7 @@ import NotificationBox from "../components/notification/NotificationBox";
 import SignIn from "./controlpanel/SignIn";
 import { IFeature, IUser } from "../models/models";
 import { useFeatures } from "../services/useFeatures";
+import { ColorFeature } from "../components/ColorFeature";
 
 export interface IControlPanelProps {
     users: IUser[];
@@ -20,7 +21,9 @@ export interface IControlPanelProps {
 
 export function ControlPanel({ authUser, users, getUsers }: IControlPanelProps) {
     const usersCollectionRef = collection(db, "users");
-    const { features } = useFeatures();
+    const { features, getColor } = useFeatures();
+    const colorFeature = getColor(features);
+    console.log(colorFeature);
     const { notification, showTemporarily } = useNotificaiton();
     const [firstName, setFirstname] = useState<string>("");
     const [lastName, setLastname] = useState<string>("");
@@ -105,6 +108,7 @@ export function ControlPanel({ authUser, users, getUsers }: IControlPanelProps) 
                             </div>
                         </div>
                     ))}
+                    <ColorFeature colorFeature={colorFeature} />
                 </div>
             </div>
         );
