@@ -90,10 +90,13 @@ export class LeaderboardService {
         });
     }
 
-    public static stackedBarsBackground(values: number[]): string {
+    public static stackedBarsBackground(values: number[], colors: string[] | null = null): string {
         const total = UtilService.sum(values);
         let background = `linear-gradient(to right, #009579 0%`;
-        const colors = ["#009579", "#05715dff"];
+
+        if (colors === null) {
+            colors = ["#009579", "#05715dff"];
+        }
         for (let i = 0; i < values.length - 1; i++) {
             const v = 100 * (UtilService.sum(values.slice(0, i + 1)) / total);
             background += `, ${colors[i]} ${v}%, ${colors[i + 1]} ${v}%`;

@@ -7,6 +7,7 @@ import { ControlPanel } from "./pages/ControlPanel";
 import { HamburgerMenu } from "./pages/HamburgerMenu";
 import { Home } from "./pages/Home";
 import { IBill, IBillLine, IUser } from "./models/models";
+import { Settings } from "./pages/Settings";
 
 export type Screen = "home" | "login" | "mine" | "settings";
 
@@ -102,6 +103,7 @@ function App() {
                 {screen === "home" && <Home bills={bills} />}
                 {screen === "login" && <ControlPanel users={users} authUser={authUser} getUsers={getUsers} />}
                 {screen === "mine" && <p>hoi</p>}
+                {screen === "settings" && <Settings />}
             </div>
         </div>
     );

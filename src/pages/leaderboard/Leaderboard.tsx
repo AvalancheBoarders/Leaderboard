@@ -2,12 +2,15 @@ import * as React from "react";
 import { ILeaderboard } from "../../models/models";
 import { LeaderboardService } from "../../services/LeaderboardService";
 import { UtilService } from "../../services/UtilService";
+import { useFeatures } from "../../services/useFeatures";
 
 export interface ILeaderBoardProps {
     leaderboard: ILeaderboard;
 }
 
 export function LeaderBoard({ leaderboard }: ILeaderBoardProps) {
+    const { getColor } = useFeatures();
+
     return (
         <div className="overflow-y-auto">
             {leaderboard.values.map((leaderboardItem, idx) => (
@@ -23,7 +26,10 @@ export function LeaderBoard({ leaderboard }: ILeaderBoardProps) {
                             className="h-full bg-bar-fill"
                             style={{
                                 width: `${100 * (UtilService.sum(leaderboardItem.values) / leaderboard.max)}%`,
-                                background: LeaderboardService.stackedBarsBackground(leaderboardItem.values),
+                                background: LeaderboardService.stackedBarsBackground(leaderboardItem.values, [
+                                    "#009579",
+                                    getColor()?.value ?? "#05715d",
+                                ]),
                             }}
                         ></div>
                         <span className="right-1 text-white font-bold font-quick absolute top-1/2 -translate-y-1/2 text-sm">
